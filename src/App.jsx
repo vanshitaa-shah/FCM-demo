@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { getToken } from "firebase/messaging";
+import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "./firebase/firebaseConfig";
+import { toast, ToastContainer } from "react-toastify";
+import Message from "./components/Message";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -30,6 +33,11 @@ function App() {
     requestPermission();
   }, []);
 
+  onMessage(messaging, (payload) => {
+    console.log("incoming msg");
+    toast(<Message notification={payload.notification} />);
+  });
+
   return (
     <>
       <div>
@@ -52,6 +60,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <ToastContainer />
     </>
   );
 }
